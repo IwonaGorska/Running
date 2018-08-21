@@ -1,0 +1,45 @@
+<project name="KursJDBC01" default="compile" basedir=".">
+
+	<property name="build.name" value="${ant.project.name}"/>
+	<tstamp>
+		<format property="build.time" pattern="yyyy.mm.dd HH:mm:ss"/>
+	</tstamp>
+	<property name="main.class" value="pl.iprogramujesz.bazy.danych.kurs.jdbc.KursJDBC01"/>
+
+	<property name="src" location="src"/>
+	<property name="lib" location="lib"/>
+	<property name="build" location="build"/>
+	<property name="dist" location="dist"/>
+
+	<path id="classpath">
+		<pathelement location="${lib}/postgresql-9.4-1200.jdbc4.jar"/>
+	</path>
+
+	<target name="init">
+		<mkdir dir="${build}"/>
+		<mkdir dir="${dist}"/>
+	</target>
+
+	<target name="clean">
+		<delete dir="${build}"/>
+		<delete dir="${dist}"/>
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="${src}" destdir="${build}" classpathref="classpath"/>
+		<copy todir="${build}">
+			<fileset dir="${src}" excludes="**/*.java"/>
+		</copy>
+	</target>
+
+	<target name="dist" depends="compile">
+		<jar jarfile="${dist}/${build.name}.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Build-Name" value="${build.name}"/>
+				<attribute name="Build-Time" value="${build.time}"/>
+				<attribute name="Main-Class" value="${main.class}"/>
+			</manifest>
+		</jar>
+	</target>
+
+</project>
