@@ -21,7 +21,12 @@ public class KursJDBC01
 			System.out.print("Podaj dystans: ");
 			distance = read.nextDouble();
 			try {
-				stmt.executeUpdate("INSERT INTO Biegi(Czas, Dystans, SredniaPredkosc, Data) VALUES (time, distance, distance/time, Now())");
+				//stmt.executeUpdate("INSERT INTO Biegi(Czas, Dystans, SredniaPredkosc, Data) VALUES (time, distance, distance/time, Now())");
+				String query = "INSERT INTO Biegi(Czas, Dystans, SredniaPredkosc) VALUES"
+						+ "('" + time + "','" + distance + "','" + distance/time + "');";
+				stmt.executeUpdate(query);
+				
+			
 			} catch (SQLException e) {
 				System.out.println("Blad w NewScore");
 				e.printStackTrace();
@@ -30,38 +35,40 @@ public class KursJDBC01
 
 		void AverageTime(Statement stmt)
 		{
-			ResultSet rs = null;
+			ResultSet rs=null;
 			try {
-				rs = stmt.executeQuery("SELECT avg(Czas) from Biegi as AvgTime");
-			} catch (SQLException e) {
+				rs = stmt.executeQuery("SELECT avg(Czas) from Biegi ");
+			} catch (SQLException e1) {
 				System.out.println("Blad w AverageTime-ExecuteQuery");
-				e.printStackTrace();
+				e1.printStackTrace();
 			}
 			try {
-				System.out.println(rs.getString("AvgTime"));
+				while (rs.next()) {
+					String name = rs.getString(1);
+					System.out.println(name);
+					
+					}
 			} catch (SQLException e) {
 				System.out.println("Blad w AverageTime-SystemOutPrintln");
-				e.printStackTrace();
-			}
-			try {
-				rs.close();
-			} catch (SQLException e) {
-				System.out.println("Blad w AverageTime-rs.close()");
 				e.printStackTrace();
 			}
 		}
 		
 		void AverageDistance(Statement stmt)
 		{
-			ResultSet rs = null;
+			ResultSet rs=null;
 			try {
-				rs = stmt.executeQuery("SELECT avg(Dystans) from Biegi as AvgDistance");
-			} catch (SQLException e) {
+				rs = stmt.executeQuery("SELECT avg(Dystans) from Biegi ");
+			} catch (SQLException e1) {
 				System.out.println("Blad w AverageDistance-ExecuteQuery");
-				e.printStackTrace();
+				e1.printStackTrace();
 			}
 			try {
-				System.out.println(rs.getString("AvgDistance"));
+				while (rs.next()) {
+					String name = rs.getString(1);
+					System.out.println(name);
+					
+					}
 			} catch (SQLException e) {
 				System.out.println("Blad w AverageDistance-SystemOutPrintln");
 				e.printStackTrace();
@@ -69,7 +76,7 @@ public class KursJDBC01
 			try {
 				rs.close();
 			} catch (SQLException e) {
-				System.out.println("Blad w AverageDistance-rs.close()");
+				System.out.println("AverageDistance-rs.close()");
 				e.printStackTrace();
 			}
 		}
@@ -78,17 +85,21 @@ public class KursJDBC01
 		{
 			ResultSet rs = null;
 			try {
-				rs = stmt.executeQuery("SELECT min(Dystans) from Biegi as MinDistance");
+				rs = stmt.executeQuery("SELECT min(Czas) from Biegi");
 			} catch (SQLException e) {
 				System.out.println("Blad w BestTime-ExecuteQuery");
 				e.printStackTrace();
 			}
 			try {
-				System.out.println(rs.getString("MinDistance"));
+				while (rs.next()) {
+					String name = rs.getString(1);
+					System.out.println(name);
+					
+					}
 			} catch (SQLException e) {
 				System.out.println("Blad w BestTime-SystemOutPrintln");
 				e.printStackTrace();
-			}
+			}			
 			try {
 				rs.close();
 			} catch (SQLException e) {
@@ -101,17 +112,23 @@ public class KursJDBC01
 		{
 			ResultSet rs = null;
 			try {
-				rs = stmt.executeQuery("SELECT max(Dystans) from Biegi as MaxDistance");
+				rs = stmt.executeQuery("SELECT max(Dystans) from Biegi");
 			} catch (SQLException e) {
 				System.out.println("Blad w BestDistance-ExecuteQuery");
 				e.printStackTrace();
 			}
 			try {
-				System.out.println(rs.getString("MaxDistance"));
+				while (rs.next()) {
+					String name = rs.getString(1);
+					System.out.println(name);
+					
+					}
 			} catch (SQLException e) {
 				System.out.println("Blad w BestDistance-SystemOutPrintln");
 				e.printStackTrace();
 			}
+			
+			
 			try {
 				rs.close();
 			} catch (SQLException e) {
@@ -133,12 +150,27 @@ public class KursJDBC01
 				while(rs.next()) 
 				{
 					System.out.println(rs.getString("Czas") + " " + rs.getString("Dystans") + " " + rs.getString("SredniaPredkosc") 
-					+ " " + rs.getString("Data") );
+					+ " " );
 				}
 			} catch (SQLException e) {
 				System.out.println("Blad w AllScores-rs.next()");
 				e.printStackTrace();
 			}
+			
+			
+			
+			/*try {
+				while (rs.next()) {
+					String name = rs.getString(1);
+					System.out.println(name);
+					
+					}
+			} catch (SQLException e) {
+				System.out.println("Blad w BestDistance-SystemOutPrintln");
+				e.printStackTrace();
+			}*/
+			
+			
 			try {
 				rs.close();
 			} catch (SQLException e) {
@@ -158,7 +190,8 @@ public class KursJDBC01
 			Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "admin");
 			Statement stmt = conn.createStatement();
 		    
-			//One.stmt.executeUpdate("CREATE TABLE Biegi (id SERIAL PRIMARY KEY, Czas Real, Dystans Real, SredniaPredkosc Real,  Data Date");
+			//stmt.executeUpdate("DROP TABLE Biegi");
+			//stmt.executeUpdate("CREATE TABLE Biegi (id SERIAL PRIMARY KEY, Czas Real, Dystans Real, SredniaPredkosc Real)");
 			
 			
 			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -175,26 +208,26 @@ public class KursJDBC01
 				System.out.println(rs.getString("imie") + " " + rs.getString("nazwisko"));
 			}*/
 			
-			
-			//MENU
-			System.out.println("Co chcesz zrobic?");
-			System.out.println("1- Dodac nowy wynik; 2- Poznac sredni czas, 3- Poznac sredni dystans, "
-					+ "4- Poznac najlepszy czas, 5- Poznac najlepszy dystans, 6- Zobaczyc wszystkie wyniki");
-			One.choice = One.read.nextInt();
-			switch(One.choice)
+			do
 			{
-				case 1: One.NewScore(stmt); break;
-				case 2: One.AverageTime(stmt); break;
-				case 3: One.AverageDistance(stmt); break;
-				case 4: One.BestTime(stmt); break;
-				case 5: One.BestDistance(stmt); break;
-				case 6: One.AllScores(stmt); break;
-			
+				//MENU
+				System.out.println("Co chcesz zrobic?");
+				System.out.println("1- Dodac nowy wynik; 2- Poznac sredni czas, 3- Poznac sredni dystans, "
+						+ "4- Poznac najlepszy czas, 5- Poznac najlepszy dystans, 6- Zobaczyc wszystkie wyniki, "
+						+ "0-Wyjscie z programu");
+				One.choice = One.read.nextInt();
+				switch(One.choice)
+				{
+					case 1: One.NewScore(stmt); break;
+					case 2: One.AverageTime(stmt); break;
+					case 3: One.AverageDistance(stmt); break;
+					case 4: One.BestTime(stmt); break;
+					case 5: One.BestDistance(stmt); break;
+					case 6: One.AllScores(stmt); break;
+				}
 			}
-			
-			
-			
-			
+			while(One.choice!=0);
+						
 			//One.rs.close();
 			
 			
